@@ -7,9 +7,13 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import '../helpers/app_lang.dart';
+import '../helpers/enums.dart';
+import '../helpers/utils.dart';
 import '../views/components/custom_dialog.dart';
 
 class FileProvider extends ChangeNotifier {
+  final utils = Utils();
+
   List<File> selectedFiles = [];
   TextEditingController passwordController = TextEditingController();
   TextEditingController fileNameController = TextEditingController();
@@ -69,7 +73,11 @@ class FileProvider extends ChangeNotifier {
       // IV ve şifrelenmiş veriyi birleştir
       final outputBytes = [...iv.bytes, ...encrypted.bytes];
 
-      if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      final platform = utils.platformDevice();
+
+      if (platform == PlatformDevice.windows ||
+          platform == PlatformDevice.linux ||
+          platform == PlatformDevice.macOS) {
         String? savePath = await FilePicker.platform.saveFile(
           dialogTitle: fileSave1,
           fileName: '${fileNameController.text}.crypto',
@@ -94,9 +102,9 @@ class FileProvider extends ChangeNotifier {
         //android, ios
         Directory? downloadsDirectory;
 
-        if (Platform.isAndroid) {
+        if (platform == PlatformDevice.android) {
           downloadsDirectory = Directory('/storage/emulated/0/Download');
-        } else if (Platform.isIOS) {
+        } else if (platform == PlatformDevice.ios) {
           downloadsDirectory = await getDownloadsDirectory();
         }
 
@@ -210,13 +218,15 @@ class FileProvider extends ChangeNotifier {
 
     if (decryptedArchive == null || decryptedFolderName == null) return;
 
+    final platform = utils.platformDevice();
+
     try {
       Directory outputDir;
 
-      if (Platform.isAndroid) {
+      if (platform == PlatformDevice.android) {
         outputDir =
             Directory('/storage/emulated/0/Download/$decryptedFolderName');
-      } else if (Platform.isIOS) {
+      } else if (platform == PlatformDevice.ios) {
         final downloadsDir = await getDownloadsDirectory();
         if (downloadsDir != null) {
           outputDir = Directory('${downloadsDir.path}/$decryptedFolderName');
