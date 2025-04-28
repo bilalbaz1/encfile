@@ -1,0 +1,24 @@
+{
+    "HomePage": {
+        "enterP": "Geben Sie das Passwort und den Dateinamen ein.",
+        "fileSave1": "Verschlüsselte Datei speichern",
+        "fileSave2": "Verschlüsselte Datei wurde gespeichert.",
+        "select1": "Bitte Datei und Passwort eingeben.",
+        "select2": "Bitte eine .crypto-Datei auswählen.",
+        "err1": "Entschlüsselung fehlgeschlagen.",
+        "err2": "Datei ist leer.",
+        "err3": "Kein Ordner ausgewählt, Vorgang abgebrochen.",
+        "success1": "Dateien erfolgreich entschlüsselt.",
+        "select3": "Dateien hierher ziehen",
+        "t1": "Ziehen Sie die Dateien, die Sie verschlüsseln möchten, hierher.",
+        "t2": "Wenn Sie eine verschlüsselte Datei entschlüsseln möchten, ziehen Sie die .crypto-Datei hierher.",
+        "b1": "Datei auswählen",
+        "b2": "Passwort",
+        "b3": "Name der Ausgabedatei",
+        "b4": "Abbrechen",
+        "b5": "Exportieren",
+        "b6": "Entschlüsseln",
+        "b7": "Verschlüsseln",
+        "openS": "Open Source"
+    }
+}

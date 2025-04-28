@@ -1,57 +1,69 @@
-# Dosya Şifreleyici 🚀🔒
+### Languages: &nbsp; [Türkçe](https://github.com/bilalbaz1/encfile/blob/main/README/README-tr.md) &nbsp; &nbsp; [Chinese](https://github.com/bilalbaz1/encfile/blob/main/README/README-zh.md) &nbsp; &nbsp; [Japanese](https://github.com/bilalbaz1/encfile/blob/main/README/README-jp.md) &nbsp; &nbsp; [Russian](https://github.com/bilalbaz1/encfile/blob/main/README/README-ru.md) &nbsp;&nbsp; [Arabic](https://github.com/bilalbaz1/encfile/blob/main/README/README-ar.md)
 
-Bu uygulama, seçtiğin dosyaları AES-256 algoritmasıyla şifrelemeni ve daha sonra tekrar çözmeni sağlar.  
-Android, iOS, macOS, Windows ve Linux destekler!
+&nbsp;
 
----
+# File Encryptor 🚀🔒
 
-## Özellikler 🎯
-- 📂 Dosyaları sürükle bırak ile seçme
-- 🔑 Parola belirleyerek AES-256 şifreleme
-- 🗂️ Tek bir `.crypto` dosyası oluşturma
-- 📥 Android/iOS'ta doğrudan **Downloads** klasörüne kayıt
-- 🖥️ Windows, macOS ve Linux'ta dosya bulunduğu yere kayıt
-- 📤 Şifreli dosyayı kolayca çözme
-- ✨ Çapraz platform desteği
+This application allows you to encrypt your selected files with the AES-256 algorithm and later decrypt them.  
+It supports **Android, iOS, macOS, Windows, and Linux**
 
 ---
 
-## Kullanım 👨‍💻
-
-1. Uygulamayı aç.
-2. Dosyalarını sürükleyip bırak.
-3. Bir parola ve yeni dosya adı yaz.
-4. **ŞİFRELE** butonuna bas.
-5. Şifreli dosya `.crypto` uzantısıyla dışa aktarılacak.
-
-Şifre çözmek için:
-- Şifreli dosyayı seç,
-- Parolanı gir,
-- Dosyalar orijinal halleriyle çıkarılacak.
+## Features 🎯
+- 📂 Select files by drag and drop
+- 🔑 Set a password and encrypt with AES-256
+- 🗂️ Create a single `.crypto` file
+- 📥 Save directly to the **Downloads** folder on Android/iOS
+- 🖥️ Save to the selected location on Windows, macOS, and Linux
+- 📤 Easily decrypt the encrypted file
+- ✨ Cross-platform support
 
 ---
 
-## Ekran Görüntüleri 🖼️
+## Usage 👨‍💻
 
-### Dosya Seçme ve Parola Girme:
-![Screenshot1](assets/screenshot1.png)
+1. Open the application.
+2. Drag and drop your files.
+3. Enter a password and a new file name.
+4. Press the **ENCRYPT** button.
+5. The encrypted file will be exported with a `.crypto` extension.
+
+To decrypt:
+- Select the encrypted file,
+- Enter your password,
+- Files will be extracted in their original form.
 
 ---
 
-### Şifrelenmiş Dosya Başarı Mesajı:
-![Screenshot2](assets/screenshot2.png)
+## How It Works? 🖼️
+
+### Select files. Enter password and file name.
+![](assets/screenshot/1.png)
+### Encrypt.
+![](assets/screenshot/2.png)
+### Export the encrypted file.
+![](assets/screenshot/3.png)
 
 ---
 
-## Kurulum 🛠️
+## Decrypt a file:
+
+### Select the encrypted file. Enter the password.
+![](assets/screenshot/4.png)
+### Files will be extracted after decryption.
+![](assets/screenshot/5.png)
+
+---
+
+## Installation 🛠️
 
 ```bash
-# Flutter SDK'yı kurduktan sonra:
-git clone https://github.com/kullaniciadi/dosya-sifreleyici.git
-cd dosya-sifreleyici
+# After installing Flutter SDK:
+git clone https://github.com/username/file-encryptor.git
+cd file-encryptor
 
-# Paketleri yükle
+# Install packages
 flutter pub get
 
-# Çalıştır
-flutter run -d windows # veya android/ios/macos/linux
+# Run
+flutter run -d windows # or android/ios/macos/linux

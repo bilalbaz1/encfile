@@ -40,7 +40,13 @@ class _AppLocalizationsDelegate
     return [
       "en",
       "tr",
+      "zh",
+      "ja",
+      "ar",
       "ru",
+      "de",
+      "fr",
+      "pt",
     ].contains(locale.languageCode);
   }
 

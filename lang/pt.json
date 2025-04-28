@@ -1,0 +1,24 @@
+{
+    "HomePage": {
+        "enterP": "Digite a senha e o nome do arquivo.",
+        "fileSave1": "Salvar arquivo criptografado",
+        "fileSave2": "Arquivo criptografado salvo.",
+        "select1": "Por favor, insira o arquivo e a senha.",
+        "select2": "Por favor, selecione um arquivo .crypto.",
+        "err1": "Falha na descriptografia.",
+        "err2": "O arquivo está vazio.",
+        "err3": "Nenhuma pasta selecionada, operação cancelada.",
+        "success1": "Arquivos descriptografados com sucesso.",
+        "select3": "Arraste os arquivos aqui",
+        "t1": "Arraste aqui os arquivos que deseja criptografar.",
+        "t2": "Se quiser descriptografar um arquivo criptografado, arraste o arquivo .crypto aqui.",
+        "b1": "Selecionar arquivo",
+        "b2": "Senha",
+        "b3": "Nome do arquivo de saída",
+        "b4": "Cancelar",
+        "b5": "Exportar",
+        "b6": "Descriptografar",
+        "b7": "Criptografar",
+        "openS": "Código aberto"
+    }
+}

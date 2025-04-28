@@ -1,0 +1,24 @@
+{
+    "HomePage": {
+        "enterP": "Entrez le mot de passe et le nom du fichier.",
+        "fileSave1": "Enregistrer le fichier chiffré",
+        "fileSave2": "Fichier chiffré enregistré.",
+        "select1": "Veuillez entrer le fichier et le mot de passe.",
+        "select2": "Veuillez sélectionner un fichier .crypto.",
+        "err1": "Échec du déchiffrement.",
+        "err2": "Le fichier est vide.",
+        "err3": "Aucun dossier sélectionné, opération annulée.",
+        "success1": "Fichiers déchiffrés avec succès.",
+        "select3": "Glissez les fichiers ici",
+        "t1": "Glissez ici les fichiers que vous souhaitez chiffrer.",
+        "t2": "Si vous souhaitez déchiffrer un fichier chiffré, glissez ici le fichier .crypto.",
+        "b1": "Sélectionner un fichier",
+        "b2": "Mot de passe",
+        "b3": "Nom du fichier de sortie",
+        "b4": "Annuler",
+        "b5": "Exporter",
+        "b6": "Déchiffrer",
+        "b7": "Chiffrer",
+        "openS": "Code source ouvert"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "HomePage": {
+        "enterP": "Enter password and file name.",
+        "fileSave1": "Save the encrypted file",
+        "fileSave2": "Encrypted file saved.",
+        "select1": "Please enter file and password.",
+        "select2": "Please select a .crypto file.",
+        "err1": "Decryption failed.",
+        "err2": "File is empty.",
+        "err3": "No folder selected, operation cancelled.",
+        "success1": "Files decrypted successfully.",
+        "select3": "Drag files here",
+        "t1": "Drag the files you want to encrypt here.",
+        "t2": "If you want to decrypt an encrypted file, drag the .crypto file here.",
+        "b1": "Select File",
+        "b2": "Password",
+        "b3": "Output File Name",
+        "b4": "Cancel",
+        "b5": "Export",
+        "b6": "Decrypt",
+        "b7": "Encrypt",
+        "openS": "Open Source"
+    }
+}
