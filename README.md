@@ -4,19 +4,52 @@
 
 # File Encryptor 🚀🔒
 
-This application allows you to encrypt your selected files with the AES-256 algorithm and later decrypt them.  
-It supports **Android, iOS, macOS, Windows, and Linux**
+This application allows users to securely encrypt and share their files. Users can select their files and encrypt them using a password with the AES algorithm in CBC mode. The encrypted file is saved with a ".crypto" extension and works on all platforms (macOS, Windows, Linux, Android, iOS, web). It provides a secure file sharing and storage option for platforms that do not offer end-to-end encryption.
 
 ---
 
-## Features 🎯
-- 📂 Select files by drag and drop
-- 🔑 Set a password and encrypt with AES-256
-- 🗂️ Create a single `.crypto` file
-- 📥 Save directly to the **Downloads** folder on Android/iOS
-- 🖥️ Save to the selected location on Windows, macOS, and Linux
-- 📤 Easily decrypt the encrypted file
-- ✨ Cross-platform support
+# Platforms 💻 📱 🖥️ 🌐
+## [🌐 Web Site (online)](https://bilalbaz1.github.io/encfile-web/)
+## [💻 MacOS (.dmg)](https://github.com/bilalbaz1/encfile/releases/latest/download/macos.dmg)
+## [🖥️ Windows (.exe)](https://github.com/bilalbaz1/encfile/releases/latest/download/windows.exe)
+## [📱 Android (.apk)](https://github.com/bilalbaz1/encfile/releases/latest/download/android.apk)
+## [📱 Linux (.deb)](https://github.com/bilalbaz1/encfile/releases/latest/download/linux.deb)
+
+---
+
+## Purpose:
+To enable users to securely encrypt and share their files. It is developed for secure file sharing on platforms that do not offer end-to-end encryption. 🌐
+
+## Platform Support:
+The application works on all major platforms:
+- macOS 🍏
+- Windows 💻
+- Linux 🐧
+- Android 📱
+- iOS 🍎
+- Web browsers 🌍
+
+## File Encryption Process:
+1. The user selects the files they want to encrypt. 📂
+2. The selected files are first converted to ZIP format. 📦
+3. The ZIP file is converted to a byte array. 🔄
+4. It is encrypted using the AES algorithm in CBC mode with a password specified by the user. 🔑
+
+## Encrypted File Transfer:
+- The encrypted file is exported with a ".crypto" extension. 📤
+- The user can load this encrypted file back into the application to perform the decryption process. 🔓
+
+## Secure Storage:
+The application ensures that files are stored securely and in an encrypted format. 🛡️
+
+## Ease of Use:
+With a user-friendly interface, everyone can easily encrypt and decrypt files. 👩‍💻👨‍💻
+
+## Privacy and Security:
+The application prioritizes user privacy by ensuring that files are encrypted securely. 🔒✨
+
+This application helps users protect and share their files securely while providing a simple and effective experience.
+
 
 ---
 
@@ -59,7 +92,7 @@ To decrypt:
 
 ```bash
 # After installing Flutter SDK:
-git clone https://github.com/username/file-encryptor.git
+git clone https://github.com/bilalbaz1/encfile.git
 cd file-encryptor
 
 # Install packages

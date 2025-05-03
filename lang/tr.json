@@ -3,13 +3,11 @@
         "enterP": "Parola ve dosya adı girin.",
         "fileSave1": "Şifreli dosyayı kaydet",
         "fileSave2": "Şifreli dosya kaydedildi.",
-        "select1": "Lütfen dosya ve parola girin.",
         "select2": "Lütfen .crypto uzantılı dosya seçin.",
-        "err1": "Şifre çözme başarısız oldu.",
         "err2": "Dosya boş.",
         "err3": "Klasör seçilmedi, işlem iptal edildi.",
-        "success1": "Dosyalar başarıyla çözüldü",
-        "select3": "Dosyaları buraya sürükleyin",
+        "success1": "Dosyalar başarıyla çözüldü.",
+        "select3": "Dosyaları buraya sürükleyin.",
         "t1": "Şifrelemek istediğiniz dosyları buraya sürükleyin.",
         "t2": "Şifreli dosyayı çözmek istiyorsanız .crypto uzantılı dosyayı buraya sürükleyin.",
         "b1": "Dosya Seç",
@@ -19,6 +17,10 @@
         "b5": "Dışarı Aktar",
         "b6": "Şifreyi Çöz",
         "b7": "Şifrele",
-        "openS": "Açık Kaynak"
+        "openS": "Açık Kaynak",
+        "onlineWeb": "Web sitesi üzerinden dosya şifreleyebilir ve çözebilirsiniz.",
+        "select1": "Lütfen parola girin.",
+        "err1": "Şifre çözme başarısız oldu. Lütfen parolayı kontrol edin.",
+        "filePermissionErr1": "Lütfen dosya erişim iznini verin. Cihaz ayarlarından uygulama izinlerini kontrol edin."
     }
 }

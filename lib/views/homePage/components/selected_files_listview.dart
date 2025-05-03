@@ -21,25 +21,11 @@ class SelectedFilesListview extends StatelessWidget {
 
           return ListTile(
             leading: const Icon(Icons.insert_drive_file),
-            title: Text(file.path.split('/').last),
-            subtitle: FutureBuilder<int>(
-              future: file.length(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text(
-                    'Loading...',
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  final fileSize = snapshot.data;
-                  return Text(
-                    utils.formatFileSize(
-                      fileSize!,
-                    ),
-                  );
-                }
-              },
+            title: Text(file.path != null ? file.path!.split('/').last : "-"),
+            subtitle: Text(
+              utils.formatFileSize(
+                file.size,
+              ),
             ),
           );
         },

@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart' as intl;
 
 import 'enums.dart';
 
@@ -43,5 +46,43 @@ class Utils {
     } else {
       throw UnsupportedError('Platform not supported');
     }
+  }
+
+  Future<bool> checkAndRequestPermission() async {
+    try {
+      PlatformDevice platform = platformDevice();
+      if (platform == PlatformDevice.android ||
+          platform == PlatformDevice.ios) {
+        PermissionStatus status = await Permission.storage.status;
+
+        if (status.isGranted) {
+          return true;
+        } else if (status.isDenied) {
+          openAppSettings();
+          return false;
+        } else if (status.isPermanentlyDenied) {
+          openAppSettings();
+          return false;
+        } else if (status.isRestricted) {
+          openAppSettings();
+          return false;
+        } else if (status.isLimited) {
+          //! openAppSettings();
+          return true;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } catch (e) {
+      debugPrint("Utils -> checkAndRequestPermissions ERROR(catch) : $e");
+      return false;
+    }
+  }
+
+  static bool isDirectionRTL(BuildContext context) {
+    return intl.Bidi.isRtlLanguage(
+        Localizations.localeOf(context).languageCode);
   }
 }

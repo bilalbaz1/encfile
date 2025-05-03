@@ -1,20 +1,20 @@
-import 'dart:io';
+import 'fileSaverEnc/file_saver.dart'
+    if (dart.library.html) 'file_saver_web.dart';
+import 'fileDownDe/file_down.dart'
+    if (dart.library.html) 'fileDownDe/file_down_web.dart';
 
 import 'package:desktop_drop/desktop_drop.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:archive/archive.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import '../helpers/app_lang.dart';
-import '../helpers/enums.dart';
 import '../helpers/utils.dart';
-import '../views/components/custom_dialog.dart';
 
 class FileProvider extends ChangeNotifier {
   final utils = Utils();
 
-  List<File> selectedFiles = [];
+  List<PlatformFile> selectedFiles = [];
   TextEditingController passwordController = TextEditingController();
   TextEditingController fileNameController = TextEditingController();
   bool isDragging = false;
@@ -23,44 +23,24 @@ class FileProvider extends ChangeNotifier {
   Archive? decryptedArchive;
   String? decryptedFolderName;
 
-  Future<void> encryptAndSaveFunc(BuildContext context) async {
-    final tr = AppLang.langMap(context, "HomePage");
-    final String enterP = AppLang.langMapToString(tr, "enterP");
-    final String fileSave1 = AppLang.langMapToString(tr, "fileSave1");
-    final String fileSave2 = AppLang.langMapToString(tr, "fileSave2");
-
-    if (selectedFiles.isEmpty ||
-        passwordController.text.isEmpty ||
-        fileNameController.text.isEmpty) {
-      if (context.mounted) {
-        customDialog(
-          context,
-          text: enterP,
-        );
-      }
-
-      return;
-    }
-
+  Future<bool> encryptAndSaveFunc() async {
     try {
-      // ZIP arşivi oluştur
       final encoder = ZipEncoder();
       final archive = Archive();
 
-      // Dosyaları ZIP'e ekle
       for (var file in selectedFiles) {
-        final bytes = await file.readAsBytes();
-        final fileName = file.path.split('/').last;
+        final bytes = file.bytes;
+        if (bytes == null) continue;
+        final fileName = file.name;
         archive.addFile(ArchiveFile(fileName, bytes.length, bytes));
       }
 
-      // ZIP'i byte dizisine dönüştür
       final zipBytes = encoder.encode(archive);
+
       if (zipBytes == null) {
         throw "zip_error_56";
       }
 
-      // IV oluştur ve şifrele
       final key = encrypt.Key.fromUtf8(
         passwordController.text.padRight(32, '0').substring(0, 32),
       );
@@ -69,95 +49,45 @@ class FileProvider extends ChangeNotifier {
           encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc));
 
       final encrypted = encrypter.encryptBytes(zipBytes, iv: iv);
-
-      // IV ve şifrelenmiş veriyi birleştir
       final outputBytes = [...iv.bytes, ...encrypted.bytes];
 
       final platform = utils.platformDevice();
 
-      if (platform == PlatformDevice.windows ||
-          platform == PlatformDevice.linux ||
-          platform == PlatformDevice.macOS) {
-        String? savePath = await FilePicker.platform.saveFile(
-          dialogTitle: fileSave1,
-          fileName: '${fileNameController.text}.crypto',
-        );
+      bool status = await saveFile(
+        platform: platform,
+        fileNameController: fileNameController,
+        outputBytes: outputBytes,
+        selectedFiles: selectedFiles,
+        passwordController: passwordController,
+        notifyListeners: notifyListeners,
+      );
 
-        if (savePath != null) {
-          final outputFile = File(savePath);
-          await outputFile.writeAsBytes(outputBytes);
-          if (context.mounted) {
-            customDialog(
-              context,
-              text: "$fileSave2: ${outputFile.path}",
-            );
-          }
-
-          selectedFiles.clear();
-          passwordController.clear();
-          fileNameController.clear();
-          notifyListeners();
-        }
+      if (status) {
+        selectedFiles.clear();
+        passwordController.clear();
+        isDecrypted = false;
+        decryptedArchive = null;
+        decryptedFolderName = null;
+        notifyListeners();
+        return true;
       } else {
-        //android, ios
-        Directory? downloadsDirectory;
-
-        if (platform == PlatformDevice.android) {
-          downloadsDirectory = Directory('/storage/emulated/0/Download');
-        } else if (platform == PlatformDevice.ios) {
-          downloadsDirectory = await getDownloadsDirectory();
-        }
-
-        if (downloadsDirectory != null) {
-          final outputFile = File(
-              '${downloadsDirectory.path}/${fileNameController.text}.crypto');
-          await outputFile.writeAsBytes(encrypted.bytes);
-        } else {
-          debugPrint("ERROR_c_102");
-        }
+        return false;
       }
     } catch (e) {
-      debugPrint('ERROR_c_124: $e');
+      debugPrint('file_provider -> encryptAndSaveFunc ERROR(catch) : $e');
+      return false;
     }
   }
 
-  Future<void> decryptFileFunc(BuildContext context) async {
-    final tr = AppLang.langMap(context, "HomePage");
-    final String select1 = AppLang.langMapToString(tr, "select1");
-    final String select2 = AppLang.langMapToString(tr, "select2");
-    final String err1 = AppLang.langMapToString(tr, "err1");
-    final String err2 = AppLang.langMapToString(tr, "err2");
-
-    if (selectedFiles.isEmpty || passwordController.text.isEmpty) {
-      if (context.mounted) {
-        customDialog(
-          context,
-          text: select1,
-        );
-      }
-
-      return;
-    }
-
+  Future<bool> decryptFileFunc() async {
     try {
       final file = selectedFiles.first;
-      if (!file.path.toLowerCase().endsWith('.crypto')) {
-        if (context.mounted) {
-          customDialog(
-            context,
-            text: select2,
-          );
-        }
 
-        return;
+      final encryptedBytes = file.bytes;
+      if (encryptedBytes == null || encryptedBytes.isEmpty) {
+        throw "c_empty_file";
       }
 
-      final encryptedBytes = await file.readAsBytes();
-      if (encryptedBytes.isEmpty) {
-        throw Exception('c_empty_file');
-      }
-
-      // İlk 16 byte IV, geri kalanı şifrelenmiş veri
       final ivBytes = encryptedBytes.sublist(0, 16);
       final dataBytes = encryptedBytes.sublist(16);
 
@@ -170,133 +100,80 @@ class FileProvider extends ChangeNotifier {
 
       final decrypted =
           encrypter.decryptBytes(encrypt.Encrypted(dataBytes), iv: iv);
-      if (decrypted.isEmpty) {
-        if (context.mounted) {
-          customDialog(
-            context,
-            text: err1,
-          );
-        }
 
+      if (decrypted.isEmpty) {
         throw 'c_pass';
       }
 
-      // ZIP'i çöz
-      try {
-        final archive = ZipDecoder().decodeBytes(decrypted);
-        if (archive.isEmpty) {
-          if (context.mounted) {
-            customDialog(
-              context,
-              text: err2,
-            );
-          }
-
-          throw 'c_zip_empty';
-        }
-
-        // Şifreli dosyanın adını al ve .crypto uzantısını kaldır
-        String fileName = file.path.split('/').last;
-        String folderName = fileName.substring(0, fileName.length - 7);
-
-        isDecrypted = true;
-        decryptedArchive = archive;
-        decryptedFolderName = folderName;
-        notifyListeners();
-      } catch (e) {
-        debugPrint('ERROR_c_197: $e');
+      final archive = ZipDecoder().decodeBytes(decrypted);
+      if (archive.isEmpty) {
+        throw 'c_zip_empty';
       }
+
+      String fileName = file.name;
+      String folderName = fileName.substring(0, fileName.length - 7);
+
+      isDecrypted = true;
+      decryptedArchive = archive;
+      decryptedFolderName = folderName;
+      notifyListeners();
+
+      return true;
     } catch (e) {
-      debugPrint('ERROR_c_200: $e');
+      debugPrint('file_provider -> decryptFileFunc ERROR(catch) : $e');
+      return false;
     }
   }
 
-  Future<void> extractFilesFunc(BuildContext context) async {
-    final tr = AppLang.langMap(context, "HomePage");
-    final String err3 = AppLang.langMapToString(tr, "err3");
-    final String success1 = AppLang.langMapToString(tr, "success1");
-
-    if (decryptedArchive == null || decryptedFolderName == null) return;
-
-    final platform = utils.platformDevice();
-
+  Future<bool> extractFilesFunc(BuildContext context) async {
     try {
-      Directory outputDir;
+      final platform = utils.platformDevice();
 
-      if (platform == PlatformDevice.android) {
-        outputDir =
-            Directory('/storage/emulated/0/Download/$decryptedFolderName');
-      } else if (platform == PlatformDevice.ios) {
-        final downloadsDir = await getDownloadsDirectory();
-        if (downloadsDir != null) {
-          outputDir = Directory('${downloadsDir.path}/$decryptedFolderName');
-        } else {
-          // iOS'da eğer Downloads bulunamazsa Documents'a kaydet
-          final documentsDir = await getApplicationDocumentsDirectory();
-          outputDir = Directory('${documentsDir.path}/$decryptedFolderName');
-        }
+      bool downloadStatus = await fileDown(
+        decryptedArchive: decryptedArchive!,
+        decryptedFolderName: decryptedFolderName ?? "encDfile",
+        platform: platform,
+      );
+
+      if (downloadStatus && context.mounted) {
+        selectedFiles.clear();
+        passwordController.clear();
+        isDecrypted = false;
+        decryptedArchive = null;
+        decryptedFolderName = null;
+        notifyListeners();
+        return true;
       } else {
-        // macOS, Windows, Linux
-        String? selectedDirectory =
-            await FilePicker.platform.getDirectoryPath();
-        if (selectedDirectory == null) {
-          // Kullanıcı seçim yapmadıysa işlemi iptal et
-          if (context.mounted) {
-            customDialog(context, text: err3);
-          }
-          return;
-        }
-        outputDir = Directory('$selectedDirectory/$decryptedFolderName');
+        return false;
       }
-
-      if (!await outputDir.exists()) {
-        await outputDir.create(recursive: true);
-      }
-
-      for (final file in decryptedArchive!) {
-        if (file.isFile) {
-          final filename = file.name;
-          final data = file.content as List<int>;
-          final outputFile = File('${outputDir.path}/$filename');
-          await outputFile.writeAsBytes(data);
-        }
-      }
-
-      if (context.mounted) {
-        customDialog(
-          context,
-          text: "$success1: ${outputDir.path}",
-        );
-      }
-
-      selectedFiles.clear();
-      passwordController.clear();
-      isDecrypted = false;
-      decryptedArchive = null;
-      decryptedFolderName = null;
-      notifyListeners();
     } catch (e) {
-      debugPrint('ERROR_c_238: $e');
+      debugPrint('file_provider -> extractFilesFunc ERROR(catch) : $e');
+
+      return false;
     }
   }
 
   Future<void> pickFilesFunc() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        withData: true, // web için, true yapıldı
+      );
 
-    if (result != null) {
-      selectedFiles = result.paths.map((path) => File(path!)).toList();
-      final file = selectedFiles.first;
+      if (result != null) {
+        selectedFiles = result.files;
+        final file = selectedFiles.first;
 
-      if (selectedFiles.length == 1 &&
-          file.path.toLowerCase().endsWith('.crypto')) {
-        // .crypto uzantılı dosya atıldı.
-
-        isDecryptMode = true;
-      } else {
-        isDecryptMode = false;
+        if (selectedFiles.length == 1 &&
+            file.name.toLowerCase().endsWith('.crypto')) {
+          isDecryptMode = true;
+        } else {
+          isDecryptMode = false;
+        }
+        notifyListeners();
       }
-      notifyListeners();
+    } catch (e) {
+      debugPrint('file_provider -> pickFilesFunc ERROR(catch) : $e');
     }
   }
 
@@ -305,22 +182,39 @@ class FileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onDragDoneFunc(DropDoneDetails detail) {
-    selectedFiles = detail.files.map((e) => File(e.path)).toList();
-    isDecrypted = false;
-    decryptedArchive = null;
-    decryptedFolderName = null;
+  Future<void> onDragDoneFunc(DropDoneDetails detail) async {
+    try {
+      if (kIsWeb) return; // web de calismiyor!!!
 
-    final file = selectedFiles.first;
-    if (selectedFiles.length == 1 &&
-        file.path.toLowerCase().endsWith('.crypto')) {
-      // .crypto uzantılı dosya atıldı.
+      for (var e in detail.files) {
+        final length = await e.length();
+        final bytes = await e.readAsBytes();
 
-      isDecryptMode = true;
-    } else {
-      isDecryptMode = false;
+        selectedFiles.add(
+          PlatformFile(
+            name: e.name,
+            path: e.path,
+            size: length,
+            bytes: bytes,
+          ),
+        );
+      }
+
+      isDecrypted = false;
+      decryptedArchive = null;
+      decryptedFolderName = null;
+
+      final file = selectedFiles.first;
+      if (selectedFiles.length == 1 &&
+          file.name.toLowerCase().endsWith('.crypto')) {
+        isDecryptMode = true;
+      } else {
+        isDecryptMode = false;
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('file_provider -> onDragDoneFunc ERROR(catch) : $e');
     }
-    notifyListeners();
   }
 
   void onDragEnteredFunc(DropEventDetails detail) {

@@ -20,8 +20,10 @@ Future<void> customDialog(
           Radius.circular(5),
         ),
       ),
-      content: SizedBox(
-        width: MediaQuery.of(context).size.width,
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 400,
+        ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
           child: Wrap(
@@ -40,7 +42,7 @@ Future<void> customDialog(
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
+                padding: const EdgeInsets.only(bottom: 20.0),
                 child: SelectableText(
                   text,
                   textAlign: TextAlign.center,

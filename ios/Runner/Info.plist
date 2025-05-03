@@ -79,5 +79,13 @@
 		</dict>
 	</dict>
 	</array>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app requires access to your photos.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>The app requires access to manage your documents.</string>
+	<key>NSFileProviderUsageDescription</key>
+	<string>The app requires access to your files.</string>
+
 </dict>
 </plist>

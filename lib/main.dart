@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "ENCRYPTO",
+        title: "encfile",
         theme: ThemeData.dark().copyWith(
           primaryColor: Colors.blue,
           scaffoldBackgroundColor: const Color.fromARGB(255, 36, 36, 36),
