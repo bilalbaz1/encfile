@@ -3,6 +3,8 @@ import 'package:encfile/providers/file_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../helpers/enums.dart';
+
 class SelectedFilesListview extends StatelessWidget {
   SelectedFilesListview({super.key});
 
@@ -11,6 +13,8 @@ class SelectedFilesListview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileProvider = Provider.of<FileProvider>(context);
+
+    final platform = utils.platformDevice();
 
     return Expanded(
       child: ListView.builder(
@@ -21,7 +25,9 @@ class SelectedFilesListview extends StatelessWidget {
 
           return ListTile(
             leading: const Icon(Icons.insert_drive_file),
-            title: Text(file.path != null ? file.path!.split('/').last : "-"),
+            title: (platform == PlatformDevice.web)
+                ? Text(file.name)
+                : Text(file.path != null ? file.path!.split('/').last : "-"),
             subtitle: Text(
               utils.formatFileSize(
                 file.size,
